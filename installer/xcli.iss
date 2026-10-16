@@ -1,4 +1,4 @@
-#define AppVersion "1.1.0"
+#define AppVersion "1.2.0"
 [Setup]
 AppId={{C3D190EA-A278-4AFA-A87E-26641D5B0965}
 AppName=XCLI TokenPlan

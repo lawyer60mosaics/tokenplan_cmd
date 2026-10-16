@@ -13,11 +13,27 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - run: python -m pip install pyinstaller==6.20.0
       - run: python -m unittest discover -s tests -v
       - run: python -m PyInstaller --noconfirm --clean --onefile --console --name xcli --add-data "zellij.kdl;." app.py
       - run: dist/xcli.exe --version
       - run: dist/xcli.exe --demo --once --json
+      - name: Pack and verify npm installation
+        shell: pwsh
+        run: |
+          npm pack
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $package = (Get-ChildItem tokenplan-cmd-*.tgz).FullName
+          $prefix = Join-Path $env:RUNNER_TEMP 'xcli-npm-test'
+          npm install --global --prefix $prefix $package --ignore-scripts --no-audit --no-fund
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "$prefix/xcli.cmd" --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          & "$prefix/xcli.cmd" --demo --once --json
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Prepare standalone package
         shell: pwsh
         run: |
@@ -48,9 +64,13 @@ jobs:
         with:
           name: xcli-windows-installer
           path: dist/XCLI-*-Setup-x64.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: xcli-npm-package
+          path: tokenplan-cmd-*.tgz
       - name: Publish installer
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
-        run: gh release create $env:GITHUB_REF_NAME dist/XCLI-*-Setup-x64.exe --verify-tag --title "XCLI $env:GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
+        run: gh release create $env:GITHUB_REF_NAME dist/XCLI-*-Setup-x64.exe tokenplan-cmd-*.tgz --verify-tag --title "XCLI $env:GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md

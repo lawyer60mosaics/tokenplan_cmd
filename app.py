@@ -20,7 +20,7 @@ from quota.settings import screen as settings_screen
 
 RESOURCES = Path(__file__).resolve().parent
 ROOT = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else RESOURCES
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 DATA_ROOT = Path(os.environ.get("APPDATA", Path.home() / ".config")) / "XCLI"
 
 

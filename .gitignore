@@ -22,3 +22,7 @@ zellij.exe
 .pytest_cache/
 
 xcli.exe
+
+node_modules/
+npm/native/
+*.tgz

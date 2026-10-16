@@ -1,0 +1,19 @@
+{
+  "name": "tokenplan-cmd",
+  "version": "1.2.0",
+  "description": "Multi-AI quota dashboard for Windows CMD",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lawyer60mosaics/tokenplan_cmd.git"
+  },
+  "homepage": "https://github.com/lawyer60mosaics/tokenplan_cmd#readme",
+  "engines": { "node": ">=18" },
+  "os": ["win32"],
+  "cpu": ["x64"],
+  "bin": { "xcli": "npm/bin/xcli.cjs" },
+  "files": ["npm/bin/", "npm/native/xcli.exe", "README.md", "NOTICE.md", "LICENSE"],
+  "scripts": {
+    "prepack": "node npm/prepare-package.cjs"
+  }
+}

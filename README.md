@@ -1,10 +1,25 @@
-# XCLI / TokenPlan CMD 1.1.0
+# XCLI / TokenPlan CMD 1.2.0
 
 Windows CMD 多 AI 额度看板。可在一个终端显示 1–50 个面板，为每个面板配置独立刷新间隔、显示开关和数据源。
 
+## npm 一条命令安装（Windows x64）
+
+安装 Node.js 18+ 后，在 CMD 执行：
+
+```cmd
+npm install -g https://github.com/lawyer60mosaics/tokenplan_cmd/releases/download/v1.2.0/tokenplan-cmd-1.2.0.tgz
+xcli
+```
+
+此安装包内置 Windows 程序，无需 Python，无安装脚本或首次启动下载。配置入口为 `xcli --configure`，卸载用 `npm uninstall -g tokenplan-cmd`，配置仍保留。更新时再次运行对应版本的安装命令。
+
+目前提供 GitHub Release 包；尚未发布到 npm 官方仓库，因此暂不能使用 `npm install -g tokenplan-cmd` 简写。请安装 Release 的 `.tgz` 文件，GitHub 源码地址不含预编译程序。如果 CMD 提示找不到 xcli，运行 `npm prefix -g`，将输出目录加入用户 PATH 并重新打开 CMD。已有 EXE 安装版时可先在“已安装的应用”中卸载，避免同名命令优先级冲突，配置不受影响。
+
+维护者可在完成 Windows 打包后运行 `npm pack` 生成相同安装包；检查后登录 npm 并执行 `npm publish ./tokenplan-cmd-1.2.0.tgz --access public` 可发布到拥有权限的 npm 包名下。
+
 ## Windows 安装
 
-运行 `XCLI-1.1.0-Setup-x64.exe`，安装到当前用户目录，无需管理员权限。安装完成后重新打开 CMD，输入：
+运行 `XCLI-1.2.0-Setup-x64.exe`，安装到当前用户目录，无需管理员权限。安装完成后重新打开 CMD，输入：
 
 ```cmd
 xcli
