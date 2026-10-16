@@ -22,6 +22,10 @@ def resolve(name: str, explicit: str = "") -> list[str]:
     found = shutil.which(name + ".exe") or shutil.which(name) or shutil.which(name + ".cmd")
     if found and Path(found).suffix.lower() not in (".cmd", ".bat", ".ps1"):
         return [found]
+    if name == "agy" and os.environ.get("LOCALAPPDATA"):
+        native = Path(os.environ["LOCALAPPDATA"]) / "agy" / "bin" / "agy.exe"
+        if native.is_file():
+            return [str(native)]
     roots = []
     if found:
         roots.append(Path(found).parent / "node_modules")

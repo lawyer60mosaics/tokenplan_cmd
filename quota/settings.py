@@ -61,7 +61,7 @@ def edit_panel(panel: dict, config_path: Path, input_fn=input, secret_fn=getpass
             "codex": "CLI 订阅账号",
             "deepseek": "API 余额",
             "claude": "Claude Code 订阅",
-            "gemini": "Gemini CLI / Code Assist",
+            "gemini": "Antigravity agy" if panel.get("gemini_backend", "agy") == "agy" else "Gemini CLI / Code Assist",
             "ark": "方舟 API 用量与资源额度",
             "snapshot": "外部快照",
             "demo": "演示数据",
@@ -84,10 +84,15 @@ def edit_panel(panel: dict, config_path: Path, input_fn=input, secret_fn=getpass
         if panel["adapter"] == "snapshot":
             lines.append(f"8. 快照文件路径   {panel.get('snapshot', '')}")
             allowed.add("8")
-        if panel["adapter"] in ("claude", "gemini"):
+        if panel["adapter"] == "claude" or (
+            panel["adapter"] == "gemini" and panel.get("gemini_backend", "agy") == "gemini"
+        ):
             lines += [f"A. 登录凭据文件   {panel.get('auth_file') or '官方 CLI 默认路径'}"]
             allowed.add("a")
         if panel["adapter"] == "gemini":
+            lines.append(f"J. 数据源 {panel.get('gemini_backend', 'agy')}（agy / gemini）")
+            allowed.add("j")
+        if panel["adapter"] == "gemini" and panel.get("gemini_backend", "agy") == "gemini":
             lines += [
                 f"G. Google 项目 ID {panel.get('google_project') or '自动发现'}",
                 f"O. OAuth 模块路径 {panel.get('gemini_oauth_module') or '自动查找官方 CLI'}",
@@ -102,7 +107,11 @@ def edit_panel(panel: dict, config_path: Path, input_fn=input, secret_fn=getpass
             ]
             allowed.update(("p", "f", "w", "d"))
         if panel["provider"] in ("claude", "gemini", "ark"):
-            field = panel["provider"] + "_executable"
+            field = (
+                "agy_executable"
+                if panel["provider"] == "gemini" and panel.get("gemini_backend", "agy") == "agy"
+                else panel["provider"] + "_executable"
+            )
             lines.append(f"E. CLI 程序路径   {panel.get(field) or '自动查找'}")
             allowed.add("e")
         if panel["adapter"] == "deepseek":
@@ -148,7 +157,7 @@ def edit_panel(panel: dict, config_path: Path, input_fn=input, secret_fn=getpass
                     set_field(panel, field, "" if value == "-" else value)
             elif choice == "b":
                 panel["adapter"] = "snapshot" if panel["adapter"] != "snapshot" else panel["provider"]
-            elif choice in ("a", "g", "o", "p", "f", "w", "d", "e"):
+            elif choice in ("a", "g", "o", "p", "f", "w", "d", "e", "j"):
                 if choice not in allowed:
                     notice = "此选项不适用于当前数据源。"
                     continue
@@ -160,7 +169,10 @@ def edit_panel(panel: dict, config_path: Path, input_fn=input, secret_fn=getpass
                     "f": "ark_scope",
                     "w": "ark_view",
                     "d": "ark_days",
-                    "e": panel["provider"] + "_executable",
+                    "e": "agy_executable"
+                    if panel["provider"] == "gemini" and panel.get("gemini_backend", "agy") == "agy"
+                    else panel["provider"] + "_executable",
+                    "j": "gemini_backend",
                 }[choice]
                 value = input_fn("输入新值（留空保留，- 清空可选值） > ")
                 if value:

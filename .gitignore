@@ -20,3 +20,5 @@ tokenplan.exe
 zellij.exe
 .coverage
 .pytest_cache/
+
+xcli.exe

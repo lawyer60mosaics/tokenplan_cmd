@@ -272,6 +272,10 @@ def collect(panel: dict, base: Path) -> Reading:
             return codex(panel)
         if adapter == "deepseek":
             return deepseek(panel)
+        if adapter == "gemini" and panel.get("gemini_backend", "agy") == "agy":
+            from .antigravity import collect as agy_collect
+
+            return agy_collect(panel)
         if adapter in ("claude", "gemini"):
             from .subscriptions import claude, gemini
 

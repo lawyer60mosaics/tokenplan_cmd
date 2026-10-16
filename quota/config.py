@@ -8,7 +8,7 @@ import os
 from pathlib import Path
 
 PROVIDERS = ("codex", "claude", "gemini", "deepseek", "ark")
-LABELS = ("Codex", "Claude", "Gemini", "DeepSeek", "火山方舟")
+LABELS = ("Codex", "Claude", "Antigravity / Gemini", "DeepSeek", "火山方舟")
 
 
 def defaults() -> dict:
@@ -78,6 +78,8 @@ def validate(config: dict) -> dict:
             "google_project",
             "gemini_oauth_module",
             "gemini_executable",
+            "agy_executable",
+            "gemini_backend",
             "claude_executable",
             "ark_executable",
             "ark_profile",
@@ -92,6 +94,8 @@ def validate(config: dict) -> dict:
             raise ValueError("方舟查询范围必须是 mine 或 account")
         if panel.get("ark_view", "both") not in ("both", "usage", "free_quota"):
             raise ValueError("方舟查询类型无效")
+        if panel.get("gemini_backend", "agy") not in ("agy", "gemini"):
+            raise ValueError("Gemini 数据源必须是 agy 或 gemini")
         days = panel.get("ark_days", 1)
         if isinstance(days, bool) or not isinstance(days, int) or not 1 <= days <= 31:
             raise ValueError("方舟查询天数必须为 1 至 31")

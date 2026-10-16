@@ -20,7 +20,8 @@ from quota.settings import screen as settings_screen
 
 RESOURCES = Path(__file__).resolve().parent
 ROOT = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else RESOURCES
-VERSION = "1.0.0"
+VERSION = "1.1.0"
+DATA_ROOT = Path(os.environ.get("APPDATA", Path.home() / ".config")) / "XCLI"
 
 
 def layout_text(panels: list[dict], config_path: Path, python: str = sys.executable) -> str:
@@ -169,7 +170,7 @@ def interactive(settings: dict, path: Path, single: bool = False, persist: bool 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="AI Quota: CMD 多 AI 额度仪表盘")
     parser.add_argument("--version", action="version", version="TokenPlan CMD " + VERSION)
-    parser.add_argument("--config", type=Path, default=ROOT / "config.json")
+    parser.add_argument("--config", type=Path, default=DATA_ROOT / "config.json")
     parser.add_argument("--once", action="store_true", help="读取一次并退出")
     parser.add_argument("--json", action="store_true", help="配合 --once 输出 JSON")
     parser.add_argument("--demo", action="store_true", help="明确标记的演示数据，不访问真实账户")
@@ -198,7 +199,8 @@ def main(argv=None) -> int:
         if args.layout or args.zellij:
             if args.demo:
                 raise ValueError("布局使用真实配置；演示请直接运行 --demo")
-            target = args.layout or ROOT / "quota-layout.kdl"
+            target = args.layout or path.parent / "quota-layout.kdl"
+            target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(layout_text(settings["panels"], path), encoding="utf-8")
             if args.zellij:
                 executable = shutil.which("zellij")

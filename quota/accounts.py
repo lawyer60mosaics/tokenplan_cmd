@@ -10,7 +10,7 @@ from .providers import SourceError, codex_command, collect
 HELP = {
     "codex": "安装 Codex CLI 后选择 L 登录；用 CLI 当前账号或独立 CODEX_HOME 读取额度。",
     "claude": "安装官方 Claude Code 后选择 L 登录订阅账号；读取 .claude/.credentials.json。API Key 不适用。",
-    "gemini": "安装: npm install -g @google/gemini-cli；选择 L 后在 CLI 内登录 Google，完成后退出 CLI。额度属于 CLI/Code Assist，不代表网页聊天。",
+    "gemini": "安装 Antigravity agy CLI，在其界面登录；使用内置 /usage 查询分组共享额度。旧 Gemini CLI 可在配置页 J 切换。",
     "deepseek": "选择 K 输入官方 DeepSeek API Key；选择 T 验证。仅查询余额，不调用模型。",
     "ark": "安装: npm install -g @volcengine/ark-cli；选择 L 完成 SSO。API Key 不能替代控制台查询权限；统计延迟 5–30 分钟。",
 }
@@ -30,6 +30,8 @@ def login(panel: dict) -> int:
             if path.name != ".credentials.json":
                 raise SourceError("Claude 登录路径必须使用 CLI 标准文件名 .credentials.json")
             env["CLAUDE_CONFIG_DIR"] = str(path.parent)
+    elif provider == "gemini" and panel.get("gemini_backend", "agy") == "agy":
+        command = resolve("agy", panel.get("agy_executable", ""))
     elif provider == "gemini":
         if (
             panel.get("auth_file")
