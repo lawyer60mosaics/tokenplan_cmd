@@ -14,6 +14,7 @@ oauth_creds.json
 .build-venv/
 build/
 dist/
+package/
 *.spec
 tokenplan.exe
 zellij.exe

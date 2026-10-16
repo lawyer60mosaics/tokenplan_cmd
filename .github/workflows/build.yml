@@ -18,14 +18,13 @@ jobs:
       - run: python -m PyInstaller --noconfirm --clean --onefile --console --name tokenplan --add-data "zellij.kdl;." app.py
       - run: dist/tokenplan.exe --version
       - run: dist/tokenplan.exe --demo --once --json
+      - name: Prepare standalone package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Path package
+          Copy-Item -LiteralPath 'dist/tokenplan.exe','start.cmd','start-config.cmd','start-zellij.cmd','README.md','LICENSE','NOTICE.md' -Destination package
+          cmd.exe /d /c "package\start.cmd --version"
       - uses: actions/upload-artifact@v4
         with:
           name: tokenplan-cmd-windows-x64
-          path: |
-            dist/tokenplan.exe
-            start.cmd
-            start-config.cmd
-            start-zellij.cmd
-            README.md
-            LICENSE
-            NOTICE.md
+          path: package/
