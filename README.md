@@ -17,6 +17,8 @@ xcli
 
 维护者可在完成 Windows 打包后运行 `npm pack` 生成相同安装包；检查后登录 npm 并执行 `npm publish ./tokenplan-cmd-1.2.0.tgz --access public` 可发布到拥有权限的 npm 包名下。
 
+维护者首次发布、GitHub Actions 自动发布授权和后续版本更新见 [PUBLISHING.md](PUBLISHING.md)。启用后推送版本标签即可自动发布到 npm。
+
 ## Windows 安装
 
 运行 `XCLI-1.2.0-Setup-x64.exe`，安装到当前用户目录，无需管理员权限。安装完成后重新打开 CMD，输入：

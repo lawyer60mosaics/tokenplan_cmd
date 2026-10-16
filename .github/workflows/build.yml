@@ -74,3 +74,30 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: pwsh
         run: gh release create $env:GITHUB_REF_NAME dist/XCLI-*-Setup-x64.exe tokenplan-cmd-*.tgz --verify-tag --title "XCLI $env:GITHUB_REF_NAME" --notes-file RELEASE_NOTES.md
+  publish-npm:
+    name: Publish to npm
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v') && vars.NPM_PUBLISH_ENABLED == 'true'
+    runs-on: windows-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm install --global npm@11 --ignore-scripts --no-audit --no-fund
+      - uses: actions/download-artifact@v4
+        with:
+          name: xcli-npm-package
+          path: npm-release
+      - name: Publish verified package using npm trusted publishing
+        shell: pwsh
+        run: |
+          $packages = @(Get-ChildItem npm-release/tokenplan-cmd-*.tgz)
+          if ($packages.Count -ne 1) { throw 'Expected exactly one npm package' }
+          $expectedName = 'tokenplan-cmd-' + $env:GITHUB_REF_NAME.Substring(1) + '.tgz'
+          if ($packages[0].Name -ne $expectedName) { throw 'Tag and package version must match' }
+          npm publish $packages[0].FullName --access public --ignore-scripts --provenance --registry=https://registry.npmjs.org/
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
