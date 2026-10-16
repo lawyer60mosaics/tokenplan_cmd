@@ -1,0 +1,10 @@
+{
+  "provider": "claude",
+  "model": "account",
+  "source": "EXAMPLE ONLY - replace with an authorized collector",
+  "observed_at": "2026-01-01T00:00:00Z",
+  "metrics": [
+    {"label": "订阅额度", "unit": "%"},
+    {"label": "Token 用量", "unit": "tokens"}
+  ]
+}

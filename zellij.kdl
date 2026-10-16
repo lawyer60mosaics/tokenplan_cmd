@@ -1,0 +1,16 @@
+// Local dashboard settings; no changes to the user's global Zellij config.
+show_startup_tips false
+show_release_notes false
+session_serialization false
+on_force_close "quit"
+on_quit "quit"
+keybinds {
+    shared {
+        bind "Ctrl x" { Quit; }
+        bind "Ctrl q" { Quit; }
+        bind "Alt h" { MoveFocus "Left"; }
+        bind "Alt l" { MoveFocus "Right"; }
+        bind "Alt j" { MoveFocus "Down"; }
+        bind "Alt k" { MoveFocus "Up"; }
+    }
+}

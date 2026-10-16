@@ -1,0 +1,15 @@
+[project]
+name = "tokenplan-cmd"
+version = "1.0.0"
+description = "Multi-provider AI quota dashboard for Windows CMD and Zellij"
+requires-python = ">=3.10"
+license = "MIT"
+readme = "README.md"
+dependencies = []
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
+[tool.ruff.lint]
+select = ["F", "E9"]
